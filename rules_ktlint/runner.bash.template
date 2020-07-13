@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -e
+
+KTLINT_SHORT_PATH=@@KTLINT_SHORT_PATH@@
+ARGS=@@ARGS@@
+INCLUDE_PATTERNS=@@INCLUDE_PATTERNS@@
+
+ktlint_short_path=$(readlink "$KTLINT_SHORT_PATH")
+cd "$BUILD_WORKSPACE_DIRECTORY"
+java -jar "$ktlint_short_path" "${ARGS[@]}" "${INCLUDE_PATTERNS[@]}"

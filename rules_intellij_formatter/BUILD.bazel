@@ -1,0 +1,7 @@
+exports_files(
+    [
+        "runner.bash.template",
+        "tulip-code-scheme.xml",
+    ],
+    visibility = ["//visibility:public"],
+)

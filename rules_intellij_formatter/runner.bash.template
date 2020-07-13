@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+
+set -e
+set -o pipefail
+
+INTELLIJ_SHORT_PATH=@@INTELLIJ_SHORT_PATH@@
+FORMAT_PATH=@@FORMAT_PATH@@
+MODE=@@MODE@@
+CODE_SCHEME_PATH=@@CODE_SCHEME_PATH@@
+INTELLIJ_FORMAT_WORKTREE_DIR=intellij-format-worktree
+
+trap clean SIGINT SIGTERM EXIT
+function clean() {
+    # "git worktree remove" doesn't have an option to remove and return status
+    # 0 if already absent.
+    if git worktree list --porcelain | grep -q "/${INTELLIJ_FORMAT_WORKTREE_DIR}\$" ; then
+        git worktree remove -f "${INTELLIJ_FORMAT_WORKTREE_DIR}"
+    fi
+
+    rm -rf /tmp/IdeaIC
+}
+
+clean
+
+intellij_short_path=$(readlink "$INTELLIJ_SHORT_PATH")
+code_scheme_path=$(readlink "$CODE_SCHEME_PATH")
+
+cd "$BUILD_WORKSPACE_DIRECTORY"
+
+if [ "$MODE" == "format" ]
+then
+
+    files_to_format=( $(find "$FORMAT_PATH" -type f @@EXCLUDE_PATTERNS@@ \( \
+        -name '*.kt' -or -name '*.kts' \
+        -or -name '*.java' \
+        -or -name '*.json' \
+        -or -name '*.yaml' -or -name '*.yml' \
+        -or -name '*.xml'  \
+        -or -name '*.properties' \
+        -or -name '*.groovy' \
+    \)) )
+
+    "$intellij_short_path" -settings "$code_scheme_path" "${files_to_format[@]}"
+
+    echo
+    echo "Finished formatting..."
+fi
+
+if [ "$MODE" == "check" ]
+then
+
+    if [ ! -z "$(git --no-pager diff HEAD)" ]
+    then
+        echo -e "\033[33mWarning: you have uncommitted changes, formatting for these files will not be checked\033[0m"
+    fi
+
+    git worktree add -f "$INTELLIJ_FORMAT_WORKTREE_DIR" HEAD 1>/dev/null
+    cd "$INTELLIJ_FORMAT_WORKTREE_DIR"
+
+    files_to_format=( $(find "$FORMAT_PATH" -type f @@EXCLUDE_PATTERNS@@ \( \
+        -name '*.kt' -or -name '*.kts' \
+        -or -name '*.java' \
+        -or -name '*.json' \
+        -or -name '*.yaml' -or -name '*.yml' \
+        -or -name '*.xml'  \
+        -or -name '*.properties' \
+        -or -name '*.groovy' \
+    \)) )
+
+    rm -f WORKSPACE # Remove workspace to prevent bazel from re-fetching dependencies
+    "$intellij_short_path" -settings "$code_scheme_path" "${files_to_format[@]}"
+    diff=$(git --no-pager diff "${files_to_format[@]}")
+    if [ ! -z "$diff" ]
+    then
+        echo
+        git --no-pager diff "${files_to_format[@]}"
+        echo
+        echo "Found formatting violations, see diff above"
+        exit 1
+    else
+        echo
+        echo "Found no formatting violations"
+    fi
+fi

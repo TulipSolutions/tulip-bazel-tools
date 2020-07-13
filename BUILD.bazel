@@ -1,0 +1,32 @@
+load("//rules_intellij_formatter:def.bzl", "intellij_formatter")
+
+intellij_formatter(
+    name = "intellij_format",
+)
+
+intellij_formatter(
+    name = "intellij_check",
+    mode = "check",
+)
+
+load("@nl_tulipsolutions_bazel_tools//rules_ktlint:def.bzl", "ktlint")
+
+ktlint(
+    name = "ktlint_format",
+    format = True,
+)
+
+ktlint(
+    name = "ktlint_check",
+)
+
+load("@nl_tulipsolutions_bazel_tools//rules_addlicense:def.bzl", "addlicense")
+
+addlicense(
+    name = "addlicense_format",
+)
+
+addlicense(
+    name = "addlicense_check",
+    mode = "check",
+)
