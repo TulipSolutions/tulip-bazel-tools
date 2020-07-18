@@ -51,3 +51,22 @@ You may want to include them again when supplying your own set, e.g.:
            "./.ijwb/*",
         ],
     )
+
+### Custom code schema file (XML)
+
+The built-in default is the bundled Tulipsolutions code schema XML file.
+
+IntelliJ IDEA allows to export your own code scheme from the menu:
+*Settings*, *Editor*, *Code Style*, *wrench icon*, *Export*, *IntelliJ IDEA Code style XML*.
+
+Then override the default using the `code_scheme` argument pointing to the XML file label.
+Example for placing in your project in `mypkg/mydir/mycodescheme.xml`:
+
+    intellij_formatter(
+        name = "intellij_format",
+        code_scheme = "//mypkg/mydir:mycodescheme.xml",
+    )
+
+And, in `mypkg/mydir/BUILD.bazel`, this file should be marked as exportable for use, e.g.:
+
+    exports_files(["mycodescheme.xml"])
