@@ -7,14 +7,14 @@ Import this repository (common for all rules, see [parent directory README.md](.
 
 Add the following code to the `WORKSPACE` file
 
-    load("@nl_tulipsolutions_bazel_tools//bazel/rules_intellij_formatter:deps.bzl", "intellij_formatter_dependencies")
+    load("@nl_tulipsolutions_bazel_tools//rules_intellij_formatter:deps.bzl", "intellij_formatter_dependencies")
 
     intellij_formatter_dependencies()
 
 The following statements placed in a `BUILD` file format all Java, Kotlin, XML, JSON and YAML files in the directory
 of the `BUILD` file recursively.
 
-    load("@nl_tulipsolutions_bazel_tools//bazel/rules_intellij_formatter:def.bzl", "intellij_formatter")
+    load("@nl_tulipsolutions_bazel_tools//rules_intellij_formatter:def.bzl", "intellij_formatter")
 
     intellij_formatter(
         name = "intellij_format",
