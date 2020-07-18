@@ -31,3 +31,23 @@ tarball contains files with spaces. Set up a `.bazelrc` in your project like thi
 
     # See also https://github.com/bazelbuild/bazel/issues/4327
     build --experimental_inprocess_symlink_creation
+
+## Optional arguments
+
+### Exclude files
+
+The `exclude_patterns` argument allows for a list of glob patterns to exclude matching files for the rule.
+If omitted, the built-in default list of glob patterns is `[".*.git/*", ".*.project/*", ".*idea/*"]`.
+You may want to include them again when supplying your own set, e.g.:
+
+    intellij_formatter(
+        name = "intellij_format",
+        exclude_patterns = [
+           ".*.git/*",
+           ".*.project/*",
+           ".*idea/*",
+           "*node_modules*",
+           "./package-lock.json",
+           "./.ijwb/*",
+        ],
+    )

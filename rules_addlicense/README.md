@@ -35,3 +35,21 @@ The following statements placed in a `BUILD` file will verify the addlicense rul
         name = "addlicense_check",
         mode = "check",
     )
+
+## Optional arguments
+
+The `exclude_patterns` argument allows for a list of glob patterns to exclude matching files for the rule.
+If omitted, the built-in default list of glob patterns is `[".*.git/*", ".*.project/*", ".*idea/*"]`.
+You may want to include them again when supplying your own set, e.g.:
+
+    addlicense(
+        name = "addlicense_format",
+        exclude_patterns = [
+           ".*.git/*",
+           ".*.project/*",
+           ".*idea/*",
+           "*node_modules*",
+           "./package-lock.json",
+           "./.ijwb/*",
+        ],
+    )
