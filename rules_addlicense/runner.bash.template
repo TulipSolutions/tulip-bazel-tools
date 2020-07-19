@@ -9,58 +9,28 @@ ADDLICENSE_WORKTREE_DIR=addlicense-worktree
 COPYRIGHT_HOLDER=@@COPYRIGHT_HOLDER@@
 LICENSE_TYPE=@@LICENSE_TYPE@@
 
-trap clean SIGINT SIGTERM EXIT
-function clean() {
-    # "git worktree remove" doesn't have an option to remove and return status
-    # 0 if already absent.
-    if git worktree list --porcelain | grep -q "/${ADDLICENSE_WORKTREE_DIR}\$" ; then
-        git worktree remove -f "${ADDLICENSE_WORKTREE_DIR}"
-    fi
-}
-
-clean
+if [ "$MODE" == "format" ]; then
+  CHECK_ARG=
+elif [ "$MODE" == "check" ]; then
+  CHECK_ARG="-check"
+else
+  echo "Unknown mode"
+  exit 1
+fi
 
 addlicense_short_path=$(readlink "$ADDLICENSE_SHORT_PATH")
 
 cd "$BUILD_WORKSPACE_DIRECTORY"
 
-if [ "$MODE" == "format" ]
-then
-
-    files_to_format=( $(find -type f @@EXCLUDE_PATTERNS@@ ) )
-
-    "$addlicense_short_path" -c "$COPYRIGHT_HOLDER" -l "$LICENSE_TYPE" "${files_to_format[@]}"
-
-    echo
-    echo "Finished adding license headers..."
-fi
-
-if [ "$MODE" == "check" ]
-then
-
-    if [ ! -z "$(git --no-pager diff HEAD)" ]
-    then
-        echo -e "\033[33mWarning: you have uncommitted changes, formatting for these files will not be checked\033[0m"
-    fi
-
-    git worktree add -f "$ADDLICENSE_WORKTREE_DIR" HEAD 1>/dev/null
-    cd "$ADDLICENSE_WORKTREE_DIR"
-    rm -f WORKSPACE # Remove workspace to prevent bazel from re-fetching dependencies
-
-    files_to_format=( $(find -type f @@EXCLUDE_PATTERNS@@ ) )
-
-    "$addlicense_short_path" -c "$COPYRIGHT_HOLDER" -l "$LICENSE_TYPE" "${files_to_format[@]}"
-    diff=$(git --no-pager diff "${files_to_format[@]}")
-
-    if [ ! -z "$diff" ]
-    then
-        echo
-        git --no-pager diff "${files_to_format[@]}"
-        echo
-        echo "Found formatting violations, see diff above"
-        exit 1
+files_to_format=( $(find -type f @@EXCLUDE_PATTERNS@@ ) )
+"$addlicense_short_path" $CHECK_ARG -v -c "$COPYRIGHT_HOLDER" -l "$LICENSE_TYPE" "${files_to_format[@]}" \
+  || (
+    error_code=$?
+    if [ "$MODE" == "check" -a "$error_code" == "1" ]; then
+      echo "Found addlicense formatting violations in files printed above."
+      exit $error_code
     else
-        echo
-        echo "Found no formatting violations"
+      echo "Error occurred during addlicense formatting."
+      exit $error_code
     fi
-fi
+  )

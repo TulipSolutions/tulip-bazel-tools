@@ -17,12 +17,12 @@ def addlicense_dependencies(
         )
 
     if not omit_com_github_google_addlicense and not native.existing_rule("com_github_google_addlicense"):
-        add_license_version = "22550fa7c1b07a27e810565721ac49469615e05b"
+        addlicense_version = "df58acafd6d50899389e66702729341491643f43"
 
         go_repository(
             name = "com_github_google_addlicense",
             importpath = "github.com/google/addlicense",
-            sha256 = "beeea8a9e2950a23b0bb1e22d94cd58bea9cfaf1d321ef9f2ac2707d92ce7ab3",
-            strip_prefix = "addlicense-%s" % add_license_version,
-            urls = ["https://github.com/google/addlicense/archive/%s.zip" % add_license_version],
+            sha256 = "160ed9e63fbdb435bd73f671f0838098a2967fd7ffb4b137cf88ba1321c11990",
+            strip_prefix = "addlicense-%s" % addlicense_version,
+            urls = ["https://github.com/google/addlicense/archive/%s.zip" % addlicense_version],
         )
