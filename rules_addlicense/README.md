@@ -29,10 +29,12 @@ The following statements placed in a `BUILD` file will verify the addlicense rul
 
     addlicense(
         name = "addlicense_format",
+        copyright_holder = "My Organization",
     )
 
     addlicense(
         name = "addlicense_check",
+        copyright_holder = "My Organization",
         mode = "check",
     )
 

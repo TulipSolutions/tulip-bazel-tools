@@ -13,6 +13,7 @@ def _addlicense_impl(ctx):
         "@@ADDLICENSE_SHORT_PATH@@": shell.quote(ctx.executable._addlicense.short_path),
         "@@MODE@@": shell.quote(ctx.attr.mode),
         "@@EXCLUDE_PATTERNS@@": exclude_patterns_str,
+        "@@COPYRIGHT_HOLDER@@": shell.quote(ctx.attr.copyright_holder),
     }
 
     ctx.actions.expand_template(
@@ -46,6 +47,7 @@ addlicense = rule(
                 ".*idea/*",
             ],
         ),
+        "copyright_holder": attr.string(mandatory = True),
         "_addlicense": attr.label(
             default = Label("@com_github_google_addlicense//:addlicense"),
             executable = True,

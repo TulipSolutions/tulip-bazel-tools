@@ -24,9 +24,11 @@ load("@nl_tulipsolutions_bazel_tools//rules_addlicense:def.bzl", "addlicense")
 
 addlicense(
     name = "addlicense_format",
+    copyright_holder = "Tulip Solutions B.V.",
 )
 
 addlicense(
     name = "addlicense_check",
+    copyright_holder = "Tulip Solutions B.V.",
     mode = "check",
 )

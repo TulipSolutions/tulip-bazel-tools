@@ -6,9 +6,8 @@ set -o pipefail
 ADDLICENSE_SHORT_PATH=@@ADDLICENSE_SHORT_PATH@@
 MODE=@@MODE@@
 ADDLICENSE_WORKTREE_DIR=addlicense-worktree
-COPYRIGHT_OWNER="Tulip Solutions B.V."
+COPYRIGHT_HOLDER=@@COPYRIGHT_HOLDER@@
 LICENSE_TYPE="apache"
-COPYRIGHT_YEAR="2020"
 
 trap clean SIGINT SIGTERM EXIT
 function clean() {
@@ -30,7 +29,7 @@ then
 
     files_to_format=( $(find -type f @@EXCLUDE_PATTERNS@@ ) )
 
-    "$addlicense_short_path" -c "$COPYRIGHT_OWNER" -l "$LICENSE_TYPE" -y "$COPYRIGHT_YEAR" "${files_to_format[@]}"
+    "$addlicense_short_path" -c "$COPYRIGHT_HOLDER" -l "$LICENSE_TYPE" "${files_to_format[@]}"
 
     echo
     echo "Finished adding license headers..."
@@ -50,7 +49,7 @@ then
 
     files_to_format=( $(find -type f @@EXCLUDE_PATTERNS@@ ) )
 
-    "$addlicense_short_path" -c "$COPYRIGHT_OWNER" -l "$LICENSE_TYPE" -y "$COPYRIGHT_YEAR" "${files_to_format[@]}"
+    "$addlicense_short_path" -c "$COPYRIGHT_HOLDER" -l "$LICENSE_TYPE" "${files_to_format[@]}"
     diff=$(git --no-pager diff "${files_to_format[@]}")
 
     if [ ! -z "$diff" ]
