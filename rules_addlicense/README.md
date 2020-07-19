@@ -40,6 +40,24 @@ The following statements placed in a `BUILD` file will verify the addlicense rul
 
 ## Optional arguments
 
+### License type
+
+By default, addlicense applies the Apache open source license.
+Other licenses can be used instead by supplying the `license_type` parameter.
+Available options: `apache`, `bsd`, `mit`.
+
+Example:
+
+    addlicense(
+        name = "addlicense_format",
+        copyright_holder = "My Organization",
+        license_type = "bsd",
+    )
+
+*A custom license file header is not yet supported in these Bazel rules (PR is welcome).*
+
+### Exclude patterns
+
 The `exclude_patterns` argument allows for a list of glob patterns to exclude matching files for the rule.
 If omitted, the built-in default list of glob patterns is `[".*.git/*", ".*.project/*", ".*idea/*"]`.
 You may want to include them again when supplying your own set, e.g.:

@@ -14,6 +14,7 @@ def _addlicense_impl(ctx):
         "@@MODE@@": shell.quote(ctx.attr.mode),
         "@@EXCLUDE_PATTERNS@@": exclude_patterns_str,
         "@@COPYRIGHT_HOLDER@@": shell.quote(ctx.attr.copyright_holder),
+        "@@LICENSE_TYPE@@": shell.quote(ctx.attr.license_type),
     }
 
     ctx.actions.expand_template(
@@ -46,6 +47,14 @@ addlicense = rule(
                 ".*.project/*",
                 ".*idea/*",
             ],
+        ),
+        "license_type": attr.string(
+            values = [
+                "apache",
+                "bsd",
+                "mit",
+            ],
+            default = "apache",
         ),
         "copyright_holder": attr.string(mandatory = True),
         "_addlicense": attr.label(
