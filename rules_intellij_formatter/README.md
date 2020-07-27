@@ -34,6 +34,11 @@ tarball contains files with spaces. Set up a `.bazelrc` in your project like thi
 
 ## Optional arguments
 
+### Path
+
+The `path` argument selects a directory relative to the workspace root as base for running the formatter on.
+If not provided, this is the root of the workspace.
+
 ### Exclude files
 
 The `exclude_patterns` argument allows for a list of glob patterns to exclude matching files for the rule.
