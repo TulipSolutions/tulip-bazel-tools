@@ -9,9 +9,16 @@ def _addlicense_impl(ctx):
         exclude_patterns = ["-not -path %s" % shell.quote(pattern) for pattern in ctx.attr.exclude_patterns]
         exclude_patterns_str = " ".join(exclude_patterns)
 
+    if ctx.attr.path:
+        format_path = ctx.attr.path
+    else:
+        format_path = paths.dirname(ctx.build_file_path)
+    format_path = paths.join(".", format_path)
+
     substitutions = {
         "@@ADDLICENSE_SHORT_PATH@@": shell.quote(ctx.executable._addlicense.short_path),
         "@@MODE@@": shell.quote(ctx.attr.mode),
+        "@@FORMAT_PATH@@": shell.quote(format_path),
         "@@EXCLUDE_PATTERNS@@": exclude_patterns_str,
         "@@COPYRIGHT_HOLDER@@": shell.quote(ctx.attr.copyright_holder),
         "@@LICENSE_TYPE@@": shell.quote(ctx.attr.license_type),
@@ -47,6 +54,9 @@ addlicense = rule(
                 ".*.project/*",
                 ".*idea/*",
             ],
+        ),
+        "path": attr.string(
+            doc = "Relative path from workspace root",
         ),
         "license_type": attr.string(
             values = [

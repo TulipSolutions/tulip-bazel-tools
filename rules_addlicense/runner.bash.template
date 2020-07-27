@@ -4,6 +4,7 @@ set -e
 set -o pipefail
 
 ADDLICENSE_SHORT_PATH=@@ADDLICENSE_SHORT_PATH@@
+FORMAT_PATH=@@FORMAT_PATH@@
 MODE=@@MODE@@
 ADDLICENSE_WORKTREE_DIR=addlicense-worktree
 COPYRIGHT_HOLDER=@@COPYRIGHT_HOLDER@@
@@ -22,7 +23,7 @@ addlicense_short_path=$(readlink "$ADDLICENSE_SHORT_PATH")
 
 cd "$BUILD_WORKSPACE_DIRECTORY"
 
-files_to_format=( $(find -type f @@EXCLUDE_PATTERNS@@ ) )
+files_to_format=( $(find "$FORMAT_PATH" -type f @@EXCLUDE_PATTERNS@@ ) )
 "$addlicense_short_path" $CHECK_ARG -v -c "$COPYRIGHT_HOLDER" -l "$LICENSE_TYPE" "${files_to_format[@]}" \
   || (
     error_code=$?
