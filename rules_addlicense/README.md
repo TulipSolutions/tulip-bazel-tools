@@ -78,3 +78,17 @@ You may want to include them again when supplying your own set, e.g.:
            "./.ijwb/*",
         ],
     )
+
+## Limitations
+
+### Shell argument length limit
+
+Under the hood, a `find` command gathers all files to select for formatting based on the exclude patterns and path.
+These will be provided as arguments to the actual formatter binary.
+If the number of files (arguments) or the total length of it exceed the maximum for the Bash shell, the command may fail
+with an error `Argument list too long`.
+Use appropriate `exclude_patterns` and/or `path` arguments to select files in your project more selectively.
+
+Please keep in mind to re-include the defaults of `exclude_patterns` when specifying your own.
+
+A pull request to rework the logic in the runner, by batching over a certain amount of files at a time would be welcome.
