@@ -52,5 +52,5 @@ def tulip_bazel_tools_go_dependencies(
             patch_args = ["-p1"],
             sha256 = "832c476bb442ca98a59c2291b8a504648d1c139b74acc15ef667a0e8f5e984e7",
             strip_prefix = "protobuf-%s" % protobuf_version[1:],
-            urls = ["https://github.com/google/protobuf/archive/%s.zip" % protobuf_version],
+            urls = ["https://github.com/protocolbuffers/protobuf/archive/%s.zip" % protobuf_version],
         )
